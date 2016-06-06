@@ -1,0 +1,2 @@
+# FitzBot
+BotManager for FitzNet
