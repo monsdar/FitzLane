@@ -7,7 +7,7 @@ namespace FitzBot
     {
         EasyErgsocket.Erg thisErg;
         uint originalPace = 0;   //do not forget the original pace in case the bot gets reset
-        double amplitude = 0.0001;  //amplitude with which the rowing movement is calculated
+        double amplitude = 0.1;  //amplitude with which the rowing movement is calculated
         double offsetTime = 0.0; //needed if the boat changes its pace
         double offsetDist = 0.0; //needed if the boat changes its pace
 

@@ -66,9 +66,9 @@ namespace FitzBot
             }
             else
             {
-                IBot newBot1 = new BotConstant("Bot1", 125, 20);
-                IBot newBot2 = new BotConstant("Bot2", 115, 22);
-                IBot newBot3 = new BotConstant("Bot3", 120, 19);
+                IBot newBot1 = new BotConstant("Bot1", 121, 20);
+                IBot newBot2 = new BotConstant("Bot2", 119, 19);
+                IBot newBot3 = new BotConstant("Bot3", 120, 22);
 
                 bots.Add(newBot1);
                 bots.Add(newBot2);
