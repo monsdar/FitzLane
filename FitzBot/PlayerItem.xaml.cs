@@ -1,53 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FitzBot
 {
     /// <summary>
     /// Interaction logic for PlayerItem.xaml
     /// </summary>
-    public partial class PlayerItem : UserControl
+    public partial class PlayerItem : UserControl, INotifyPropertyChanged
     {
         IBot player = null;
+        bool isMainPlayer = false;
 
-        public PlayerItem(IBot givenPlayer)
+        public PlayerItem(IBot givenPlayer, bool isMainPlayer=false)
         {
             InitializeComponent();
             DataContext = this;
             player = givenPlayer;
+            this.isMainPlayer = isMainPlayer;
+        }
+
+        public void Update(IBot givenPlayer)
+        {
+            if(givenPlayer.GetErg().ergId == player.GetErg().ergId)
+            {
+                player = givenPlayer;
+                RaisePropertyChanged("PlayerName");
+                RaisePropertyChanged("PlayerType");
+                RaisePropertyChanged("MainPlayer");
+                RaisePropertyChanged("Distance");
+                RaisePropertyChanged("Pace");
+            }
         }
 
         public string PlayerName
         {
             get { return player.GetErg().name; }
         }
-
-
         public string PlayerType
         {
             get { return player.Name; }
         }
-
+        public string MainPlayer
+        {
+            get
+            {
+                if (isMainPlayer)
+                { return "Main Player"; }
+                else
+                { return ""; }
+            }
+        }
         public string Distance
         {
             get { return "Distance: " + player.GetErg().distance.ToString("#.00") + " m"; }
         }
-
         public string Pace
         {
             get { return "Pace: " + player.GetErg().paceInSecs.ToString("#.00") + " sec/500m"; }
+        }
+
+        //-- INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

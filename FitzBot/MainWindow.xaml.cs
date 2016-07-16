@@ -135,16 +135,6 @@ namespace FitzBot
 
         void mainLoop(object sender, EventArgs e)
         {
-            //update the UI with the info we have about the bots
-            if (button_StartStop.Content.ToString() == "Stop")
-            {
-                stack_Main.Children.Clear();
-                foreach (IBot bot in bots)
-                {
-                    stack_Main.Children.Add(new PlayerItem(bot));
-                }
-            }
-
             //Receive until there is nothing left to receive
             //TODO: What if there's more data than the RenderLoop could handle? This brings down our UI if there's massive traffic...
             while (receiver.TryReceive())
@@ -163,7 +153,7 @@ namespace FitzBot
                     if (lane.playerType == typeof(BotConstant).Name)
                     {
                         IBot bot = new BotConstant(lane.ergId);
-                        stack_Main.Children.Add(new PlayerItem(bot));
+                        stack_Main.Children.Add(new PlayerItem(bot, lane.isMainPlayer));
                     }
                 }
                 else
@@ -181,7 +171,16 @@ namespace FitzBot
             foreach (IBot bot in bots)
             {
                 bot.Update(e.Erg.exerciseTime, e.Erg);
+
+                foreach (UIElement element in stack_Main.Children)
+                {
+                    if (element.GetType() == typeof(PlayerItem))
+                    {
+                        ((PlayerItem)element).Update(bot);
+                    }
+                }
             }
+            
             botSender.SendBots(bots);
         }
 
