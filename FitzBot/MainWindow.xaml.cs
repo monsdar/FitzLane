@@ -122,8 +122,7 @@ namespace FitzBot
             stack_Main.Children.Clear();
             foreach (IBot bot in bots)
             {
-                string text = bot.Name + ": " + bot.GetErg().distance.ToString("#.00") + "m";
-                stack_Main.Children.Add(new Label{ Content = text });
+                stack_Main.Children.Add(new PlayerItem(bot));
             }
 
             //Receive until there is nothing left to receive
