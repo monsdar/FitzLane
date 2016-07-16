@@ -8,16 +8,14 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Border CornerRadius="6" BorderBrush="Gray" Background="LightGray" BorderThickness="2" DockPanel.Dock="Top">
         <StackPanel Orientation="Horizontal">
-            <StackPanel HorizontalAlignment="Left">
+            <StackPanel HorizontalAlignment="Left" MinWidth="150">
                 <Label Content="{Binding PlayerType}" FontSize="12" />
-                <StackPanel  HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button Content="Delete" Padding="4" />
-                </StackPanel>
+                <Button Content="Delete" Padding="4" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
-                <Label Content="{Binding PlayerName}" FontSize="32" />
+            <StackPanel HorizontalAlignment="Center" MinWidth="150">
+                <Label Content="{Binding PlayerName}" FontSize="32" HorizontalAlignment="Center" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Right">
+            <StackPanel HorizontalAlignment="Right" MinWidth="100">
                 <Label Content="{Binding Distance}" FontSize="12" HorizontalAlignment="Right" />
                 <Label Content="{Binding Pace}" FontSize="12" HorizontalAlignment="Right" />
             </StackPanel>
