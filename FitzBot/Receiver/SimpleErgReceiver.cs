@@ -25,7 +25,7 @@ namespace FitzBot
             }
 
             newErg.name = "ReceivedPlayer";
-            newErg.distance += 0.1;
+            newErg.distance += 0.07;
             newErg.exerciseTime += 1.0/60.0;
             OnErgReceived(this, new ErgEventArgs(newErg));
 
