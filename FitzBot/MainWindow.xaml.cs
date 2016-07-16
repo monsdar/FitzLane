@@ -70,10 +70,12 @@ namespace FitzBot
                 IBot newBot1 = new BotConstant("Bot1", 121, 20);
                 IBot newBot2 = new BotConstant("Bot2", 119, 19);
                 IBot newBot3 = new BotConstant("Bot3", 120, 22);
+                IBot humanFwd = new HumanForwarder("Human Test");
 
                 bots.Add(newBot1);
                 bots.Add(newBot2);
                 bots.Add(newBot3);
+                bots.Add(humanFwd);
 
                 button_StartStop.Content = "Stop";
             }

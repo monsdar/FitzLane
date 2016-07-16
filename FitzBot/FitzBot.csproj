@@ -68,6 +68,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bots\BotConstant.cs" />
+    <Compile Include="Bots\HumanForwarder.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
     <Compile Include="Interfaces\IErgReceiver.cs" />
     <Compile Include="Interfaces\IBotSender.cs" />
