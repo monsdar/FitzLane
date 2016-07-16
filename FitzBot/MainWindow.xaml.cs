@@ -21,7 +21,8 @@ namespace FitzBot
 
             //init the networking right off the bat
             NetMQContext context = NetMQContext.Create();
-            receiver = new ZmqErgReceiver(context);
+            //receiver = new ZmqErgReceiver(context);
+            receiver = new SimpleErgReceiver();
             receiver.OnErgReceived += ergReceived;
             receiver.Connect("tcp://127.0.0.1:21743");
             botSender = new ZmqBotSender(context);
