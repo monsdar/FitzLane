@@ -23,7 +23,7 @@ namespace FitzBot
             thisErg.playertype = EasyErgsocket.PlayerType.HUMAN;
             thisErg.power = 0;
 
-            thisErg.ergId = NameToId(givenName);
+            thisErg.ergId = givenName;
         }
 
         public string Description
@@ -59,17 +59,6 @@ namespace FitzBot
                 thisErg.distance = givenParent.distance;
                 thisErg.exerciseTime = givenParent.exerciseTime;
             }
-        }
-
-        private string NameToId(string givenName)
-        {
-            int nameSeed = 0;
-            foreach (char character in givenName)
-            {
-                nameSeed += character;
-            }
-            Random rnd = new Random(nameSeed);
-            return rnd.Next().ToString();
         }
     }
 }

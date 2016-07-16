@@ -24,7 +24,7 @@ namespace FitzBot
             thisErg.paceInSecs = givenPace;
             thisErg.playertype = EasyErgsocket.PlayerType.BOT;
             thisErg.power = 0;
-            thisErg.ergId = NameToId(givenName);
+            thisErg.ergId = givenName;
 
             originalPace = givenPace;
         }
@@ -69,17 +69,6 @@ namespace FitzBot
             thisErg.paceInSecs = newPace;
             offsetTime = thisErg.exerciseTime;
             offsetDist = thisErg.distance;
-        }
-
-        private string NameToId(string givenName)
-        {
-            int nameSeed = 0;
-            foreach (char character in givenName)
-            {
-                nameSeed += character;
-            }
-            Random rnd = new Random(nameSeed);
-            return rnd.Next().ToString();
         }
     }
 }

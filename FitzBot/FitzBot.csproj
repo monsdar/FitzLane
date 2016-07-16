@@ -49,6 +49,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -69,6 +71,9 @@
     </ApplicationDefinition>
     <Compile Include="Bots\BotConstant.cs" />
     <Compile Include="Bots\HumanForwarder.cs" />
+    <Compile Include="Config\BotConstantConfig.cs" />
+    <Compile Include="Config\HumanForwarderConfig.cs" />
+    <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
     <Compile Include="Interfaces\IErgReceiver.cs" />
     <Compile Include="Interfaces\IBotSender.cs" />
