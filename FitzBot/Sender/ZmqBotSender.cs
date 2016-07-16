@@ -32,7 +32,9 @@ namespace FitzBot
             }
             
             pubSocket = context.CreatePublisherSocket();
-            pubSocket.Connect(givenAddress);
+            // Use connect when working with FitzCore. For direct connection use Bind.
+            //pubSocket.Connect(givenAddress);
+            pubSocket.Bind(givenAddress);
 
             IsConnected = true;
         }
