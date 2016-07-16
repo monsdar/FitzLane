@@ -3,7 +3,7 @@
 namespace FitzBot
 {
     public delegate void ErgEventHandler(object sender, ErgEventArgs args);
-    interface IErgReceiver
+    public interface IErgReceiver
     {
         bool IsConnected { get; }
         event ErgEventHandler OnErgReceived;

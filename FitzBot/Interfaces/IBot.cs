@@ -1,7 +1,7 @@
 ﻿
 namespace FitzBot
 {
-    interface IBot
+    public interface IBot
     {
         string Name { get; }
         string Description { get; }

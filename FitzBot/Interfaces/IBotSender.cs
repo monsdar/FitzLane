@@ -2,7 +2,7 @@
 
 namespace FitzBot
 {
-    interface IBotSender
+    public interface IBotSender
     {
         void Connect(string address);
         void SendBots(IList<IBot> botList);
