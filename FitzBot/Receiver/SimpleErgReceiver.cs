@@ -11,6 +11,7 @@ namespace FitzBot
         public event ErgEventHandler OnErgReceived;
         public bool IsConnected { get; private set; }
         private EasyErgsocket.Erg newErg = new EasyErgsocket.Erg();
+        private DateTime starttime = DateTime.Now;
 
         public void Connect(string givenAddress)
         {
@@ -25,8 +26,9 @@ namespace FitzBot
             }
 
             newErg.name = "ReceivedPlayer";
-            newErg.distance += 0.07;
-            newErg.exerciseTime += 1.0/60.0;
+
+            TimeSpan timeSinceStart = DateTime.Now - starttime;
+            newErg.exerciseTime = timeSinceStart.TotalSeconds;
             OnErgReceived(this, new ErgEventArgs(newErg));
 
             // Do NOT keep the while loop running.

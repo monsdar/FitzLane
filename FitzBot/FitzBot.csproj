@@ -72,9 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bots\BotConstant.cs" />
-    <Compile Include="Bots\HumanForwarder.cs" />
     <Compile Include="Config\BotConstantConfig.cs" />
-    <Compile Include="Config\HumanForwarderConfig.cs" />
     <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
     <Compile Include="Interfaces\IErgReceiver.cs" />
@@ -130,6 +128,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -25,64 +25,54 @@ namespace FitzBot
             for (int i = 0; i < 5; ++i)
             {
                 Lane lane = new Lane();
-                if (i == 2)
+                lane.index = i;
+                lane.isMainPlayer = false;
+                lane.ergId = "";
+                lane.playerType = typeof(BotConstant).Name;
+                    
+                BotConstantConfig botCfg = new BotConstantConfig();
+                if (i==0)
                 {
-                    lane.index = i;
+                    lane.ergId = "Bot1";
+                    botCfg.name = lane.ergId;
+                    botCfg.pace = 121;
+                    botCfg.spm = 20;
+                }
+                else if (i == 1)
+                {
+                    lane.ergId = "Bot2";
+                    botCfg.name = lane.ergId;
+                    botCfg.pace = 119;
+                    botCfg.spm = 19;
+                }
+                else if (i == 2)
+                {
                     lane.isMainPlayer = true;
                     lane.ergId = "Ingo";
-                    lane.playerType = typeof(HumanForwarder).Name;
-
-                    HumanForwarderConfig humanFwdCfg = new HumanForwarderConfig();
-                    humanFwdCfg.name = lane.ergId;
-                    MemoryStream memStream = new MemoryStream();
-                    DataContractJsonSerializer humFwdSerializer = new DataContractJsonSerializer(typeof(HumanForwarderConfig));
-                    humFwdSerializer.WriteObject(memStream, humanFwdCfg);
-
-                    lane.playerConfig = Encoding.UTF8.GetString(memStream.ToArray());
+                    botCfg.name = lane.ergId;
+                    botCfg.pace = 120;
+                    botCfg.spm = 20;
                 }
-                else
+                else if (i == 3)
                 {
-                    lane.index = i;
-                    lane.isMainPlayer = false;
-                    lane.ergId = "";
-                    lane.playerType = typeof(BotConstant).Name;
-                    
-                    BotConstantConfig botCfg = new BotConstantConfig();
-                    if (i==0)
-                    {
-                        lane.ergId = "Bot1";
-                        botCfg.name = lane.ergId;
-                        botCfg.pace = 121;
-                        botCfg.spm = 20;
-                    }
-                    else if (i == 1)
-                    {
-                        lane.ergId = "Bot2";
-                        botCfg.name = lane.ergId;
-                        botCfg.pace = 119;
-                        botCfg.spm = 19;
-                    }
-                    else if (i == 3)
-                    {
-                        lane.ergId = "Bot3";
-                        botCfg.name = lane.ergId;
-                        botCfg.pace = 120;
-                        botCfg.spm = 22;
-                    }
-                    else if (i == 4)
-                    {
-                        lane.ergId = "Bot4";
-                        botCfg.name = lane.ergId;
-                        botCfg.pace = 120;
-                        botCfg.spm = 20;
-                    }
-
-                    MemoryStream memStream = new MemoryStream();
-                    DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                    botSerializer.WriteObject(memStream, botCfg);
-
-                    lane.playerConfig = Encoding.UTF8.GetString(memStream.ToArray());
+                    lane.ergId = "Bot3";
+                    botCfg.name = lane.ergId;
+                    botCfg.pace = 120;
+                    botCfg.spm = 22;
                 }
+                else if (i == 4)
+                {
+                    lane.ergId = "Bot4";
+                    botCfg.name = lane.ergId;
+                    botCfg.pace = 120;
+                    botCfg.spm = 20;
+                }
+
+                MemoryStream memStream = new MemoryStream();
+                DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
+                botSerializer.WriteObject(memStream, botCfg);
+
+                lane.playerConfig = Encoding.UTF8.GetString(memStream.ToArray());
                 lanesCont.laneList.Add(lane);
             }
 
@@ -159,20 +149,7 @@ namespace FitzBot
 
                         foreach (Lane lane in lanesCont.laneList)
                         {
-                            if (lane.playerType == typeof(HumanForwarder).Name)
-                            {
-                                MemoryStream memStream = new MemoryStream();
-                                StreamWriter strWriter = new StreamWriter(memStream);
-                                strWriter.Write(lane.playerConfig);
-                                strWriter.Flush();
-                                memStream.Position = 0;
-                                DataContractJsonSerializer humFwdSerializer = new DataContractJsonSerializer(typeof(HumanForwarderConfig));
-                                HumanForwarderConfig humanFwdCfg = (HumanForwarderConfig)humFwdSerializer.ReadObject(memStream);
-
-                                IBot humanFwd = new HumanForwarder(lane.ergId);
-                                bots.Add(humanFwd);
-                            }
-                            else if (lane.playerType == typeof(BotConstant).Name)
+                            if (lane.playerType == typeof(BotConstant).Name)
                             {
                                 MemoryStream memStream = new MemoryStream();
                                 StreamWriter strWriter = new StreamWriter(memStream);
