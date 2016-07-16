@@ -92,16 +92,10 @@ namespace FitzBot
         {
             InitializeComponent();
 
-            WriteDefaultConfig();
-
-            //if (File.Exists(filePath))
-            //{
-            //    using (FileStream filestream = File.OpenRead(filePath))
-            //    {
-            //        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
-            //        lanesContainer = (LanesContainer)jsonSerializer.ReadObject(filestream);
-            //    }
-            //}
+            if (!File.Exists(filePath))
+            {
+                WriteDefaultConfig();
+            }
 
             for (int i=0; i < 5; ++i)
             {
@@ -109,6 +103,21 @@ namespace FitzBot
                 lane.laneIndex = i;
                 lanesContainer.laneList.Add(lane);
             }
+
+            // Load default config
+            if (File.Exists(filePath))
+            {
+                using (FileStream filestream = File.OpenRead(filePath))
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
+                    LanesContainer lanesCont = (LanesContainer)jsonSerializer.ReadObject(filestream);
+                    foreach (Lane lane in lanesCont.laneList)
+                    {
+                        playerConfiguredReceived(lane.laneIndex, lane);
+                    }
+                }
+            }
+
             updateButtons();
 
             //init the networking right off the bat
