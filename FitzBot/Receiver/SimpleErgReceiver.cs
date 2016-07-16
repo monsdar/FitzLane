@@ -10,7 +10,6 @@ namespace FitzBot
     {
         public event ErgEventHandler OnErgReceived;
         public bool IsConnected { get; private set; }
-        private double distance = 0.0;
         private EasyErgsocket.Erg newErg = new EasyErgsocket.Erg();
 
         public void Connect(string givenAddress)
@@ -26,12 +25,12 @@ namespace FitzBot
             }
 
             newErg.name = "ReceivedPlayer";
-            distance += 0.1;
-            newErg.distance = distance;
-            newErg.exerciseTime = 10.0;
+            newErg.distance += 0.1;
+            newErg.exerciseTime += 1.0/60.0;
             OnErgReceived(this, new ErgEventArgs(newErg));
 
-            return true;
+            // Do NOT keep the while loop running.
+            return false;
         }
     }
 }
