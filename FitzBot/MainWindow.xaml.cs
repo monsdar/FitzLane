@@ -18,6 +18,7 @@ namespace FitzBot
         IErgReceiver receiver = null;
         IBotSender botSender = null;
         const string filePath = "worldConfig.json";
+        LanesContainer lanesContainer = new LanesContainer();
 
         private void WriteDefaultConfig()
         {
@@ -25,7 +26,7 @@ namespace FitzBot
             for (int i = 0; i < 5; ++i)
             {
                 Lane lane = new Lane();
-                lane.index = i;
+                lane.laneIndex = i;
                 lane.isMainPlayer = false;
                 lane.ergId = "";
                 lane.playerType = typeof(BotConstant).Name;
@@ -92,7 +93,24 @@ namespace FitzBot
             InitializeComponent();
 
             WriteDefaultConfig();
-            
+
+            //if (File.Exists(filePath))
+            //{
+            //    using (FileStream filestream = File.OpenRead(filePath))
+            //    {
+            //        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
+            //        lanesContainer = (LanesContainer)jsonSerializer.ReadObject(filestream);
+            //    }
+            //}
+
+            for (int i=0; i < 5; ++i)
+            {
+                Lane lane = new Lane();
+                lane.laneIndex = i;
+                lanesContainer.laneList.Add(lane);
+            }
+            updateButtons();
+
             //init the networking right off the bat
             NetMQContext context = NetMQContext.Create();
             //receiver = new ZmqErgReceiver(context);
@@ -105,20 +123,47 @@ namespace FitzBot
             //TODO: this is our synchronuous gameloop... better do some threading in the future
             CompositionTarget.Rendering += mainLoop;
         }
-        
+
         void mainLoop(object sender, EventArgs e)
         {
             //update the UI with the info we have about the bots
-            stack_Main.Children.Clear();
-            foreach (IBot bot in bots)
+            if (button_StartStop.Content.ToString() == "Stop")
             {
-                stack_Main.Children.Add(new PlayerItem(bot));
+                stack_Main.Children.Clear();
+                foreach (IBot bot in bots)
+                {
+                    stack_Main.Children.Add(new PlayerItem(bot));
+                }
             }
 
             //Receive until there is nothing left to receive
             //TODO: What if there's more data than the RenderLoop could handle? This brings down our UI if there's massive traffic...
             while (receiver.TryReceive())
             {}
+        }
+
+        void updateButtons()
+        {
+            stack_Main.Children.Clear();
+
+            foreach (Lane lane in lanesContainer.laneList)
+            {
+                if (lane != null
+                    && lane.playerType != "")
+                {
+                    if (lane.playerType == typeof(BotConstant).Name)
+                    {
+                        IBot bot = new BotConstant(lane.ergId);
+                        stack_Main.Children.Add(new PlayerItem(bot));
+                    }
+                }
+                else
+                {
+                    PlayerItemEmpty newEmpty = new PlayerItemEmpty(lane.laneIndex);
+                    newEmpty.OnAdd += addPlayerReceived;
+                    stack_Main.Children.Add(newEmpty);
+                }
+            }
         }
 
         void ergReceived(object sender, ErgEventArgs e)
@@ -131,6 +176,28 @@ namespace FitzBot
             botSender.SendBots(bots);
         }
 
+        private void addPlayerReceived(int laneIndex)
+        {
+            ConfigureLaneWindow w = new ConfigureLaneWindow(laneIndex);
+            w.OnOk += playerConfiguredReceived;
+            w.Show();
+        }
+
+        void playerConfiguredReceived(int laneIndex, Lane laneCfg)
+        {
+            for (int i=0; i < lanesContainer.laneList.Count; ++i)
+            {
+                if (lanesContainer.laneList[i].laneIndex == laneIndex)
+                {
+                    lanesContainer.laneList[i] = laneCfg;
+                    updateButtons();
+                    return;
+                }
+            }
+            lanesContainer.laneList.Add(laneCfg);
+            updateButtons();
+        }
+
         private void button_Start_Click(object sender, RoutedEventArgs e)
         {
             if (button_StartStop.Content.ToString() == "Stop")
@@ -140,34 +207,25 @@ namespace FitzBot
             }
             else
             {
-                if (File.Exists(filePath))
+                foreach (Lane lane in lanesContainer.laneList)
                 {
-                    using (FileStream filestream = File.OpenRead(filePath))
+                    if (lane.playerType == typeof(BotConstant).Name)
                     {
-                        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
-                        LanesContainer lanesCont = (LanesContainer)jsonSerializer.ReadObject(filestream);
+                        MemoryStream memStream = new MemoryStream();
+                        StreamWriter strWriter = new StreamWriter(memStream);
+                        strWriter.Write(lane.playerConfig);
+                        strWriter.Flush();
+                        memStream.Position = 0;
+                        DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
+                        BotConstantConfig botCfg = (BotConstantConfig)botSerializer.ReadObject(memStream);
 
-                        foreach (Lane lane in lanesCont.laneList)
-                        {
-                            if (lane.playerType == typeof(BotConstant).Name)
-                            {
-                                MemoryStream memStream = new MemoryStream();
-                                StreamWriter strWriter = new StreamWriter(memStream);
-                                strWriter.Write(lane.playerConfig);
-                                strWriter.Flush();
-                                memStream.Position = 0;
-                                DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                                BotConstantConfig botCfg = (BotConstantConfig)botSerializer.ReadObject(memStream);
-
-                                IBot newBot = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
-                                bots.Add(newBot);
-                            }
-                        }
+                        IBot newBot = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
+                        bots.Add(newBot);
                     }
                 }
-
-                button_StartStop.Content = "Stop";
             }
+
+            button_StartStop.Content = "Stop";
         }
     }
 }

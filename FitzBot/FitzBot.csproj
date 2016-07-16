@@ -72,6 +72,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bots\BotConstant.cs" />
+    <Compile Include="ConfigureLaneWindow.xaml.cs">
+      <DependentUpon>ConfigureLaneWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\BotConstantConfig.cs" />
     <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
@@ -88,6 +91,10 @@
     <Compile Include="Sender\SimpleBotSender.cs" />
     <Compile Include="Sender\ZmqBotSender.cs" />
     <Compile Include="Receiver\ZmqErgReceiver.cs" />
+    <Page Include="ConfigureLaneWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

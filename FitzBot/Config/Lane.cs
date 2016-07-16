@@ -14,7 +14,7 @@ namespace FitzBot
         ///     Unique index of lane this configuration is for.
         /// </summary>
         [DataMember]
-        public int index = 0;
+        public int laneIndex = 0;
 
         /// <summary>
         ///     This flag defines if the player shall be focused by the camera.

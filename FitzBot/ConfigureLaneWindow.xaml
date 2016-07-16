@@ -1,0 +1,23 @@
+﻿<Window x:Class="FitzBot.ConfigureLaneWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FitzBot"
+        mc:Ignorable="d"
+        Title="ConfigureLaneWindow" Height="300" Width="300">
+    <Grid>
+        <Label x:Name="typeLabel" Content="Type" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="typeComboBox" HorizontalAlignment="Left" Margin="162,10,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="nameLabel" Content="Name" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Height="23" Margin="162,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="okButton" Content="Ok" HorizontalAlignment="Left" Margin="207,239,0,0" VerticalAlignment="Top" Width="75" Click="button_Ok_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="127,239,0,0" VerticalAlignment="Top" Width="75" Click="button_Cancel_Click"/>
+        <CheckBox x:Name="mainPlayerCheckBox" Content="Main Player" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="paceTextBox" HorizontalAlignment="Left" Height="23" Margin="162,129,0,0" TextWrapping="Wrap" Text="120" VerticalAlignment="Top" Width="120"/>
+        <Label x:Name="paceLabel" Content="Pace" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.175,0.955"/>
+        <Label x:Name="spmLabel" Content="SPM" HorizontalAlignment="Left" Margin="10,156,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="spmTextBox" HorizontalAlignment="Left" Height="23" Margin="162,160,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="120"/>
+
+    </Grid>
+</Window>
