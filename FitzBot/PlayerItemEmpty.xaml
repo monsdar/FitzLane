@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:FitzBot"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Border CornerRadius="6" BorderBrush="Gray" Background="LightGray" BorderThickness="2" DockPanel.Dock="Top">
+    <Border CornerRadius="6" BorderBrush="Gray" Background="LightGray" BorderThickness="2">
         <Button Content="Add Player" Click="Button_Click" />
     </Border>
 </UserControl>

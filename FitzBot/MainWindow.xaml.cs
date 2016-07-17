@@ -17,86 +17,21 @@ namespace FitzBot
         IList<IBot> bots = new List<IBot>();
         IErgReceiver receiver = null;
         IBotSender botSender = null;
-        const string filePath = "worldConfig.json";
+        const string configFilePath = "worldConfig.json";
         LanesContainer lanesContainer = new LanesContainer();
-
-        private void WriteDefaultConfig()
-        {
-            LanesContainer lanesCont = new LanesContainer();
-            for (int i = 0; i < 5; ++i)
-            {
-                Lane lane = new Lane();
-                lane.laneIndex = i;
-                lane.isMainPlayer = false;
-                lane.ergId = "";
-                lane.playerType = typeof(BotConstant).Name;
-                    
-                BotConstantConfig botCfg = new BotConstantConfig();
-                if (i==0)
-                {
-                    lane.ergId = "Bot1";
-                    botCfg.name = lane.ergId;
-                    botCfg.pace = 121;
-                    botCfg.spm = 20;
-                }
-                else if (i == 1)
-                {
-                    lane.ergId = "Bot2";
-                    botCfg.name = lane.ergId;
-                    botCfg.pace = 119;
-                    botCfg.spm = 19;
-                }
-                else if (i == 2)
-                {
-                    lane.isMainPlayer = true;
-                    lane.ergId = "Ingo";
-                    botCfg.name = lane.ergId;
-                    botCfg.pace = 120;
-                    botCfg.spm = 20;
-                }
-                else if (i == 3)
-                {
-                    lane.ergId = "Bot3";
-                    botCfg.name = lane.ergId;
-                    botCfg.pace = 120;
-                    botCfg.spm = 22;
-                }
-                else if (i == 4)
-                {
-                    lane.ergId = "Bot4";
-                    botCfg.name = lane.ergId;
-                    botCfg.pace = 120;
-                    botCfg.spm = 20;
-                }
-
-                MemoryStream memStream = new MemoryStream();
-                DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                botSerializer.WriteObject(memStream, botCfg);
-
-                lane.playerConfig = Encoding.UTF8.GetString(memStream.ToArray());
-                lanesCont.laneList.Add(lane);
-            }
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            using (FileStream filestream = File.Create(filePath))
-            {
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
-                jsonSerializer.WriteObject(filestream, lanesCont);
-            }
-        }
-
+        ConfigReader reader = null;
+        
         public MainWindow()
         {
             InitializeComponent();
 
-            if (!File.Exists(filePath))
+            //check if there's a config... if not write the default config
+            if (!File.Exists(configFilePath))
             {
-                WriteDefaultConfig();
+                ConfigWriter.WriteDefaultConfig(configFilePath);
             }
 
+            //prefill the UI - this is an easy way to have every lane filled, even if it is replaced by a configured lane in the next step
             for (int i=0; i < 5; ++i)
             {
                 Lane lane = new Lane();
@@ -104,23 +39,17 @@ namespace FitzBot
                 lanesContainer.laneList.Add(lane);
             }
 
-            // Load default config
-            if (File.Exists(filePath))
+            // Load default config (this loads an existing config or the previously created default config
+            reader = new ConfigReader(configFilePath);
+            foreach (Lane lane in reader.getLanes())
             {
-                using (FileStream filestream = File.OpenRead(filePath))
-                {
-                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(LanesContainer));
-                    LanesContainer lanesCont = (LanesContainer)jsonSerializer.ReadObject(filestream);
-                    foreach (Lane lane in lanesCont.laneList)
-                    {
-                        playerConfiguredReceived(lane.laneIndex, lane);
-                    }
-                }
+                playerConfiguredReceived(lane.laneIndex, lane);
             }
+
 
             updateButtons();
 
-            //init the networking right off the bat
+            //init the networking
             NetMQContext context = NetMQContext.Create();
             //receiver = new ZmqErgReceiver(context);
             receiver = new SimpleErgReceiver();

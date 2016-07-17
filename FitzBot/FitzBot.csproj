@@ -76,6 +76,8 @@
       <DependentUpon>ConfigureLaneWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\BotConstantConfig.cs" />
+    <Compile Include="Config\ConfigReader.cs" />
+    <Compile Include="Config\ConfigWriter.cs" />
     <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
     <Compile Include="Interfaces\IErgReceiver.cs" />
