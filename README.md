@@ -1,2 +1,2 @@
-# FitzBot
-BotManager for FitzNet
+# FitzLane
+LaneManager for FitzNet
