@@ -1,7 +1,7 @@
 ﻿
-namespace FitzBot
+namespace FitzLaneManager.Interfaces
 {
-    public interface IBot
+    public interface IPlayer
     {
         string Name { get; }
         string Description { get; }

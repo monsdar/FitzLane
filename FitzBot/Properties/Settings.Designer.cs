@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FitzBot.Properties
+namespace FitzLaneManager.Properties
 {
 
 

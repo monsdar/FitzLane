@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FitzBot
+namespace FitzLaneManager.Interfaces
 {
     public delegate void ErgEventHandler(object sender, ErgEventArgs args);
     public interface IErgReceiver

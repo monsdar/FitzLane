@@ -1,9 +1,10 @@
 ﻿using System;
 using EasyErgsocket;
+using FitzLaneManager.Interfaces;
 
-namespace FitzBot
+namespace FitzLaneManager.Bots
 {
-    class BotConstant : IBot
+    class BotConstant : IPlayer
     {
         EasyErgsocket.Erg thisErg;
         uint originalPace = 0;   //do not forget the original pace in case the bot gets reset

@@ -2,8 +2,9 @@
 using ProtoBuf;
 using NetMQ;
 using NetMQ.Sockets;
+using FitzLaneManager.Interfaces;
 
-namespace FitzBot
+namespace FitzLaneManager
 {
     class ZmqErgReceiver : IErgReceiver
     {

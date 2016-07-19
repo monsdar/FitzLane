@@ -1,17 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
+using FitzLaneManager.Interfaces;
 
-namespace FitzBot
+namespace FitzLaneManager
 {
     /// <summary>
     /// Interaction logic for PlayerItem.xaml
     /// </summary>
     public partial class PlayerItem : UserControl, INotifyPropertyChanged
     {
-        IBot player = null;
+        IPlayer player = null;
         bool isMainPlayer = false;
 
-        public PlayerItem(IBot givenPlayer, bool isMainPlayer=false)
+        public PlayerItem(IPlayer givenPlayer, bool isMainPlayer=false)
         {
             InitializeComponent();
             DataContext = this;
@@ -19,7 +20,7 @@ namespace FitzBot
             this.isMainPlayer = isMainPlayer;
         }
 
-        public void Update(IBot givenPlayer)
+        public void Update(IPlayer givenPlayer)
         {
             if(givenPlayer.GetErg().ergId == player.GetErg().ergId)
             {

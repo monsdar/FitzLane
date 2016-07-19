@@ -2,23 +2,24 @@
 using NetMQ;
 using NetMQ.Sockets;
 using ProtoBuf;
+using FitzLaneManager.Interfaces;
 
-namespace FitzBot
+namespace FitzLaneManager
 {
-    class ZmqBotSender : IBotSender
+    class ZmqErgSender : IErgSender
     {
         public bool IsConnected { get; private set; }
 
         NetMQContext context = null;
         PublisherSocket pubSocket = null;
 
-        public ZmqBotSender(NetMQContext context)
+        public ZmqErgSender(NetMQContext context)
         {
             this.context = context;
             IsConnected = false;
         }
 
-        ~ZmqBotSender()
+        ~ZmqErgSender()
         {
             pubSocket.Close();
             context.Terminate();
@@ -39,7 +40,7 @@ namespace FitzBot
             IsConnected = true;
         }
 
-        public void SendBots(IList<IBot> botList)
+        public void SendErgs(IList<IPlayer> playerList)
         {
             if (!IsConnected)
             {
@@ -49,11 +50,11 @@ namespace FitzBot
             var message = new NetMQMessage();
             message.Append("EasyErgsocket");
 
-            foreach (IBot bot in botList)
+            foreach (IPlayer player in playerList)
             {
                 using (var buffer = new System.IO.MemoryStream())
                 {
-                    Serializer.Serialize(buffer, bot.GetErg());
+                    Serializer.Serialize(buffer, player.GetErg());
                     message.Append(buffer.ToArray());
                 }
             }

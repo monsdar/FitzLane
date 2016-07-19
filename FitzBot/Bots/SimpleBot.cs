@@ -1,8 +1,9 @@
 ﻿using System;
+using FitzLaneManager.Interfaces;
 
-namespace FitzBot
+namespace FitzLaneManager.Bots
 {
-    class SimpleBot : IBot
+    class SimpleBot : IPlayer
     {
         EasyErgsocket.Erg thisErg;
 

@@ -81,7 +81,7 @@
     <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\ErgEventArgs.cs" />
     <Compile Include="Interfaces\IErgReceiver.cs" />
-    <Compile Include="Interfaces\IBotSender.cs" />
+    <Compile Include="Interfaces\IErgSender.cs" />
     <Compile Include="Bots\SimpleBot.cs" />
     <Compile Include="PlayerItem.xaml.cs">
       <DependentUpon>PlayerItem.xaml</DependentUpon>
@@ -90,8 +90,8 @@
       <DependentUpon>PlayerItemEmpty.xaml</DependentUpon>
     </Compile>
     <Compile Include="Receiver\SimpleErgReceiver.cs" />
-    <Compile Include="Sender\SimpleBotSender.cs" />
-    <Compile Include="Sender\ZmqBotSender.cs" />
+    <Compile Include="Sender\SimpleErgSender.cs" />
+    <Compile Include="Sender\ZmqErgSender.cs" />
     <Compile Include="Receiver\ZmqErgReceiver.cs" />
     <Page Include="ConfigureLaneWindow.xaml">
       <SubType>Designer</SubType>
@@ -106,7 +106,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Proto\Erg.cs" />
-    <Compile Include="Interfaces\IBot.cs" />
+    <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

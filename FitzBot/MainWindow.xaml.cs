@@ -1,22 +1,22 @@
 ﻿using NetMQ;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
+using FitzLaneManager.Interfaces;
+using FitzLaneManager.Config;
+using FitzLaneManager.Receiver;
+using FitzLaneManager.Bots;
 
-namespace FitzBot
+namespace FitzLaneManager
 {
     public partial class MainWindow : Window
     {
-        IList<IBot> bots = new List<IBot>();
+        IList<IPlayer> players = new List<IPlayer>();
         IErgReceiver receiver = null;
-        IBotSender botSender = null;
+        IErgSender ergSender = null;
         const string configFilePath = "worldConfig.json";
         LanesContainer lanesContainer = new LanesContainer();
         ConfigReader reader = null;
@@ -55,8 +55,8 @@ namespace FitzBot
             receiver = new SimpleErgReceiver();
             receiver.OnErgReceived += ergReceived;
             receiver.Connect("tcp://127.0.0.1:21743");
-            botSender = new ZmqBotSender(context);
-            botSender.Connect("tcp://127.0.0.1:21744");
+            ergSender = new ZmqErgSender(context);
+            ergSender.Connect("tcp://127.0.0.1:21744");
             
             //TODO: this is our synchronuous gameloop... better do some threading in the future
             CompositionTarget.Rendering += mainLoop;
@@ -81,8 +81,8 @@ namespace FitzBot
                 {
                     if (lane.playerType == typeof(BotConstant).Name)
                     {
-                        IBot bot = new BotConstant(lane.ergId);
-                        stack_Main.Children.Add(new PlayerItem(bot, lane.isMainPlayer));
+                        IPlayer player = new BotConstant(lane.ergId);
+                        stack_Main.Children.Add(new PlayerItem(player, lane.isMainPlayer));
                     }
                 }
                 else
@@ -97,20 +97,20 @@ namespace FitzBot
         void ergReceived(object sender, ErgEventArgs e)
         {
             //update the bots with what we've got
-            foreach (IBot bot in bots)
+            foreach (IPlayer player in players)
             {
-                bot.Update(e.Erg.exerciseTime, e.Erg);
+                player.Update(e.Erg.exerciseTime, e.Erg);
 
                 foreach (UIElement element in stack_Main.Children)
                 {
                     if (element.GetType() == typeof(PlayerItem))
                     {
-                        ((PlayerItem)element).Update(bot);
+                        ((PlayerItem)element).Update(player);
                     }
                 }
             }
             
-            botSender.SendBots(bots);
+            ergSender.SendErgs(players);
         }
 
         private void addPlayerReceived(int laneIndex)
@@ -139,7 +139,7 @@ namespace FitzBot
         {
             if (button_StartStop.Content.ToString() == "Stop")
             {
-                bots.Clear();
+                players.Clear();
                 button_StartStop.Content = "Start";
             }
             else
@@ -153,11 +153,11 @@ namespace FitzBot
                         strWriter.Write(lane.playerConfig);
                         strWriter.Flush();
                         memStream.Position = 0;
-                        DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                        BotConstantConfig botCfg = (BotConstantConfig)botSerializer.ReadObject(memStream);
+                        DataContractJsonSerializer playerSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
+                        BotConstantConfig botCfg = (BotConstantConfig)playerSerializer.ReadObject(memStream);
 
-                        IBot newBot = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
-                        bots.Add(newBot);
+                        IPlayer newPlayer = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
+                        players.Add(newPlayer);
                     }
                 }
             }

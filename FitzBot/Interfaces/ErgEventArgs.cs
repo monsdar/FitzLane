@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FitzBot
+namespace FitzLaneManager.Interfaces
 {
     public class ErgEventArgs : EventArgs
     {
