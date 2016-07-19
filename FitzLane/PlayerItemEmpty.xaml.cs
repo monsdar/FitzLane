@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     public delegate void PlayerAddClickedEventHandler(int laneIndex);
 

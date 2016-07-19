@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FitzLaneManager.Interfaces;
+using FitzLane.Interfaces;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     class SimpleErgSender : IErgSender
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace FitzLaneManager.Config
+namespace FitzLane.Config
 {
     class ConfigReader
     {

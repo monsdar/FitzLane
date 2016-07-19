@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
-using FitzLaneManager.Interfaces;
+using FitzLane.Interfaces;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     /// <summary>
     /// Interaction logic for PlayerItem.xaml

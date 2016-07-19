@@ -1,7 +1,7 @@
 ﻿using System;
-using FitzLaneManager.Interfaces;
+using FitzLane.Interfaces;
 
-namespace FitzLaneManager.Bots
+namespace FitzLane.Bots
 {
     class SimpleBot : IPlayer
     {
@@ -53,7 +53,7 @@ namespace FitzLaneManager.Bots
             thisErg.distance = 0.0;
         }
 
-        public void Update(double timePassed, EasyErgsocket.Erg givenParent = null)
+        public void Update(EasyErgsocket.Erg givenParent = null)
         {
             if(givenParent != null)
             {

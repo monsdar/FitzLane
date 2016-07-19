@@ -2,10 +2,10 @@
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows;
-using FitzLaneManager.Config;
-using FitzLaneManager.Bots;
+using FitzLane.Config;
+using FitzLane.Bots;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     public delegate void ConfigureLaneWindowEventHandler(int laneIndex, Lane laneCfg);
 

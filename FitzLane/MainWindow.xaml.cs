@@ -2,23 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Windows;
 using System.Windows.Media;
-using FitzLaneManager.Interfaces;
-using FitzLaneManager.Config;
-using FitzLaneManager.Receiver;
-using FitzLaneManager.Bots;
+using FitzLane.Interfaces;
+using FitzLane.Config;
+using FitzLane.Receiver;
+using FitzLane.Bots;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     public partial class MainWindow : Window
     {
-        IList<IPlayer> players = new List<IPlayer>();
+        IDictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
         IErgReceiver receiver = null;
         IErgSender ergSender = null;
         const string configFilePath = "worldConfig.json";
-        LanesContainer lanesContainer = new LanesContainer();
+        List<Lane> lanes = new List<Lane>();
         ConfigReader reader = null;
         
         public MainWindow()
@@ -36,7 +37,7 @@ namespace FitzLaneManager
             {
                 Lane lane = new Lane();
                 lane.laneIndex = i;
-                lanesContainer.laneList.Add(lane);
+                lanes.Add(lane);
             }
 
             // Load default config (this loads an existing config or the previously created default config
@@ -45,16 +46,11 @@ namespace FitzLaneManager
             {
                 playerConfiguredReceived(lane.laneIndex, lane);
             }
-
-
+            
             updateButtons();
 
             //init the networking
             NetMQContext context = NetMQContext.Create();
-            //receiver = new ZmqErgReceiver(context);
-            receiver = new SimpleErgReceiver();
-            receiver.OnErgReceived += ergReceived;
-            receiver.Connect("tcp://127.0.0.1:21743");
             ergSender = new ZmqErgSender(context);
             ergSender.Connect("tcp://127.0.0.1:21744");
             
@@ -64,17 +60,69 @@ namespace FitzLaneManager
 
         void mainLoop(object sender, EventArgs e)
         {
-            //Receive until there is nothing left to receive
-            //TODO: What if there's more data than the RenderLoop could handle? This brings down our UI if there's massive traffic...
-            while (receiver.TryReceive())
-            {}
+            //Update all the players
+            //This loop tries to update at least 1 player in each iteration, if it fails the loop is either over or there is a failed parent/child link
+            List<string> alreadyUpdatedPlayers = new List<string>();
+            while (alreadyUpdatedPlayers.Count < players.Count)
+            {
+                //see if there's a player that we could update
+                bool hasPlayerBeenUpdated = false;
+                foreach (Lane lane in lanes)
+                {
+                    if (players.ContainsKey(lane.ergId) &&
+                        !alreadyUpdatedPlayers.Contains(lane.ergId))
+                    {
+                        if (lane.parentId == "")
+                        {
+                            players[lane.ergId].Update(null);
+                            alreadyUpdatedPlayers.Add(lane.ergId);
+                            hasPlayerBeenUpdated = true;
+                        }
+                        else if (alreadyUpdatedPlayers.Contains(lane.parentId))
+                        {
+                            EasyErgsocket.Erg parent = players[lane.parentId].GetErg();
+                            players[lane.ergId].Update(parent);
+                            alreadyUpdatedPlayers.Add(lane.ergId);
+                            hasPlayerBeenUpdated = true;
+                        }
+                        else
+                        {
+                            //This lane has a parent that does not exist...
+                            continue;
+                        }
+                    }
+                }
+
+                if (!hasPlayerBeenUpdated)
+                {
+                    //no player updated... there seems to be a problem?
+                    //TODO: Have a plan on what to do...
+                    break;
+                }
+            }
+
+            //update the GUI
+            foreach (KeyValuePair<string, IPlayer> playerItem in players)
+            {
+                foreach (UIElement element in stack_Main.Children)
+                {
+                    if (element.GetType() == typeof(PlayerItem))
+                    {
+                        ((PlayerItem)element).Update(playerItem.Value);
+                    }
+                }
+            }
+
+            //send the bots to network
+            IList<IPlayer> flattenedList = players.Values.ToList<IPlayer>();
+            ergSender.SendErgs(flattenedList);
         }
 
         void updateButtons()
         {
             stack_Main.Children.Clear();
 
-            foreach (Lane lane in lanesContainer.laneList)
+            foreach (Lane lane in lanes)
             {
                 if (lane != null
                     && lane.playerType != "")
@@ -94,25 +142,6 @@ namespace FitzLaneManager
             }
         }
 
-        void ergReceived(object sender, ErgEventArgs e)
-        {
-            //update the bots with what we've got
-            foreach (IPlayer player in players)
-            {
-                player.Update(e.Erg.exerciseTime, e.Erg);
-
-                foreach (UIElement element in stack_Main.Children)
-                {
-                    if (element.GetType() == typeof(PlayerItem))
-                    {
-                        ((PlayerItem)element).Update(player);
-                    }
-                }
-            }
-            
-            ergSender.SendErgs(players);
-        }
-
         private void addPlayerReceived(int laneIndex)
         {
             ConfigureLaneWindow w = new ConfigureLaneWindow(laneIndex);
@@ -122,16 +151,16 @@ namespace FitzLaneManager
 
         void playerConfiguredReceived(int laneIndex, Lane laneCfg)
         {
-            for (int i=0; i < lanesContainer.laneList.Count; ++i)
+            for (int i=0; i < lanes.Count; ++i)
             {
-                if (lanesContainer.laneList[i].laneIndex == laneIndex)
+                if (lanes[i].laneIndex == laneIndex)
                 {
-                    lanesContainer.laneList[i] = laneCfg;
+                    lanes[i] = laneCfg;
                     updateButtons();
                     return;
                 }
             }
-            lanesContainer.laneList.Add(laneCfg);
+            lanes.Add(laneCfg);
             updateButtons();
         }
 
@@ -144,7 +173,7 @@ namespace FitzLaneManager
             }
             else
             {
-                foreach (Lane lane in lanesContainer.laneList)
+                foreach (Lane lane in lanes)
                 {
                     if (lane.playerType == typeof(BotConstant).Name)
                     {
@@ -157,7 +186,7 @@ namespace FitzLaneManager
                         BotConstantConfig botCfg = (BotConstantConfig)playerSerializer.ReadObject(memStream);
 
                         IPlayer newPlayer = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
-                        players.Add(newPlayer);
+                        players[lane.ergId] = newPlayer;
                     }
                 }
             }

@@ -2,9 +2,9 @@
 using NetMQ;
 using NetMQ.Sockets;
 using ProtoBuf;
-using FitzLaneManager.Interfaces;
+using FitzLane.Interfaces;
 
-namespace FitzLaneManager
+namespace FitzLane
 {
     class ZmqErgSender : IErgSender
     {

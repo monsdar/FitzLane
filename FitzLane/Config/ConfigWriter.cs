@@ -2,9 +2,9 @@
 using System.Text;
 using System.IO;
 using System.Runtime.Serialization.Json;
-using FitzLaneManager.Bots;
+using FitzLane.Bots;
 
-namespace FitzLaneManager.Config
+namespace FitzLane.Config
 {
     class ConfigWriter
     {

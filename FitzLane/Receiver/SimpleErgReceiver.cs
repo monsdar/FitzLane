@@ -1,7 +1,7 @@
 ﻿using System;
-using FitzLaneManager.Interfaces;
+using FitzLane.Interfaces;
 
-namespace FitzLaneManager.Receiver
+namespace FitzLane.Receiver
 {
     class SimpleErgReceiver : IErgReceiver
     {

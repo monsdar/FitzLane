@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace FitzLaneManager.Config
+namespace FitzLane.Config
 {
     [DataContract]
     class BotConstantConfig
