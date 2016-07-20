@@ -43,8 +43,8 @@
       <HintPath>..\packages\NetMQ.3.3.2.2\lib\net40\NetMQ.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -71,28 +71,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Bots\BotConstant.cs" />
     <Compile Include="ConfigureLaneWindow.xaml.cs">
       <DependentUpon>ConfigureLaneWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Config\BotConstantConfig.cs" />
     <Compile Include="Config\ConfigReader.cs" />
     <Compile Include="Config\ConfigWriter.cs" />
     <Compile Include="Config\Lane.cs" />
-    <Compile Include="Interfaces\ErgEventArgs.cs" />
-    <Compile Include="Interfaces\IErgReceiver.cs" />
     <Compile Include="Interfaces\IErgSender.cs" />
-    <Compile Include="Bots\SimpleBot.cs" />
     <Compile Include="PlayerItem.xaml.cs">
       <DependentUpon>PlayerItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="PlayerItemEmpty.xaml.cs">
       <DependentUpon>PlayerItemEmpty.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Receiver\SimpleErgReceiver.cs" />
+    <Compile Include="Plugin\PlayerProviderLoader.cs" />
     <Compile Include="Sender\SimpleErgSender.cs" />
     <Compile Include="Sender\ZmqErgSender.cs" />
-    <Compile Include="Receiver\ZmqErgReceiver.cs" />
     <Page Include="ConfigureLaneWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,8 +99,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Proto\Erg.cs" />
-    <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -148,6 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FitzLanePlugin\FitzLanePlugin.csproj">
+      <Project>{b097ff6f-bcce-4f03-890c-c25acdd82be5}</Project>
+      <Name>FitzLanePlugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

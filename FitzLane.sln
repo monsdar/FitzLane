@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitzLane", "FitzLane\FitzLane.csproj", "{418AD05C-68D6-46C1-BB1F-5F9EBE6CCD82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitzLanePlugin", "FitzLanePlugin\FitzLanePlugin.csproj", "{B097FF6F-BCCE-4F03-890C-C25ACDD82BE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotConstant", "BotConstant\BotConstant.csproj", "{BFCD9412-DC42-4BB0-B46D-4816A059DEE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{418AD05C-68D6-46C1-BB1F-5F9EBE6CCD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{418AD05C-68D6-46C1-BB1F-5F9EBE6CCD82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{418AD05C-68D6-46C1-BB1F-5F9EBE6CCD82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B097FF6F-BCCE-4F03-890C-C25ACDD82BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B097FF6F-BCCE-4F03-890C-C25ACDD82BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B097FF6F-BCCE-4F03-890C-C25ACDD82BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B097FF6F-BCCE-4F03-890C-C25ACDD82BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFCD9412-DC42-4BB0-B46D-4816A059DEE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFCD9412-DC42-4BB0-B46D-4816A059DEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFCD9412-DC42-4BB0-B46D-4816A059DEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFCD9412-DC42-4BB0-B46D-4816A059DEE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
-using FitzLane.Interfaces;
+using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
 {

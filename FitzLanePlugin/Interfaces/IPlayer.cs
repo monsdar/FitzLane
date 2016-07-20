@@ -1,5 +1,5 @@
 ﻿
-namespace FitzLane.Interfaces
+namespace FitzLanePlugin.Interfaces
 {
     public interface IPlayer
     {

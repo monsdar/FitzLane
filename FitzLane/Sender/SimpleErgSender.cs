@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FitzLane.Interfaces;
+using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
 {

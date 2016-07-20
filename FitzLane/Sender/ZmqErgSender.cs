@@ -3,6 +3,7 @@ using NetMQ;
 using NetMQ.Sockets;
 using ProtoBuf;
 using FitzLane.Interfaces;
+using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
 {

@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Collections.Generic;
 using System.Windows;
 using FitzLane.Config;
-using FitzLane.Bots;
+using FitzLane.Plugin;
+using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
 {
@@ -15,35 +17,40 @@ namespace FitzLane
     public partial class ConfigureLaneWindow : Window
     {
         public event ConfigureLaneWindowEventHandler OnOk;
-        private int laneIdx;
+        PlayerProviderLoader playerLoader = null;
+        private int laneIndex;
 
-        public ConfigureLaneWindow(int laneIndex = -1)
+        public ConfigureLaneWindow(PlayerProviderLoader givenPlayerLoader, int givenIndex = -1)
         {
-            laneIdx = laneIndex;
-
             InitializeComponent();
 
-            typeComboBox.Items.Add(typeof(BotConstant).Name);
+            laneIndex = givenIndex;
+            playerLoader = givenPlayerLoader;
+            foreach (string name in playerLoader.GetPlayerNames())
+            {
+                typeComboBox.Items.Add(name);
+            }
         }
 
         private void button_Ok_Click(object sender, RoutedEventArgs e)
         {
             Lane laneCfg = new Lane();
-            laneCfg.laneIndex = laneIdx;
+            laneCfg.laneIndex = laneIndex;
             laneCfg.isMainPlayer = (bool)mainPlayerCheckBox.IsChecked;
             laneCfg.ergId = nameTextBox.Text;
             laneCfg.playerType = typeComboBox.Text;
 
-            if (laneCfg.playerType == typeof(BotConstant).Name)
+
+            List<IPlayerProvider> possiblePlayers = playerLoader.GetPlayerProvider();
+            foreach (IPlayerProvider provider in possiblePlayers)
             {
-                BotConstantConfig botCfg = new BotConstantConfig();
-                MemoryStream memStream = new MemoryStream();
-                DataContractJsonSerializer botSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                botSerializer.WriteObject(memStream, botCfg);
-                laneCfg.playerConfig = Encoding.UTF8.GetString(memStream.ToArray());
+                if(provider.IsValidPlayertype(laneCfg.playerType))
+                {
+                    laneCfg.playerConfig = provider.GetDefaultPlayerConfig();
+                }
             }
 
-            OnOk(laneIdx, laneCfg);
+            OnOk(laneIndex, laneCfg);
 
             this.Close();
         }

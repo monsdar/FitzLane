@@ -8,29 +8,32 @@ using System.Windows;
 using System.Windows.Media;
 using FitzLane.Interfaces;
 using FitzLane.Config;
-using FitzLane.Receiver;
-using FitzLane.Bots;
+using FitzLane.Plugin;
+using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
 {
     public partial class MainWindow : Window
     {
         IDictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
-        IErgReceiver receiver = null;
         IErgSender ergSender = null;
         const string configFilePath = "worldConfig.json";
         List<Lane> lanes = new List<Lane>();
         ConfigReader reader = null;
-        
+        PlayerProviderLoader playerProviderLoader = null;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            //check if there's a config... if not write the default config
-            if (!File.Exists(configFilePath))
-            {
-                ConfigWriter.WriteDefaultConfig(configFilePath);
-            }
+            //get the PlayerLoaders from the plugins
+            playerProviderLoader =  new PlayerProviderLoader("plugins/player/");
+
+            ////check if there's a config... if not write the default config
+            //if (!File.Exists(configFilePath))
+            //{
+            //    ConfigWriter.WriteDefaultConfig(configFilePath);
+            //}
 
             //prefill the UI - this is an easy way to have every lane filled, even if it is replaced by a configured lane in the next step
             for (int i=0; i < 5; ++i)
@@ -48,7 +51,7 @@ namespace FitzLane
             }
             
             updateButtons();
-
+            
             //init the networking
             NetMQContext context = NetMQContext.Create();
             ergSender = new ZmqErgSender(context);
@@ -127,10 +130,13 @@ namespace FitzLane
                 if (lane != null
                     && lane.playerType != "")
                 {
-                    if (lane.playerType == typeof(BotConstant).Name)
+                    foreach (IPlayerProvider provider in playerProviderLoader.GetPlayerProvider())
                     {
-                        IPlayer player = new BotConstant(lane.ergId);
-                        stack_Main.Children.Add(new PlayerItem(player, lane.isMainPlayer));
+                        if (provider.IsValidPlayertype(lane.playerType))
+                        {
+                            IPlayer player = provider.GetPlayer(lane.playerConfig);
+                            stack_Main.Children.Add(new PlayerItem(player, lane.isMainPlayer));
+                        }
                     }
                 }
                 else
@@ -144,7 +150,7 @@ namespace FitzLane
 
         private void addPlayerReceived(int laneIndex)
         {
-            ConfigureLaneWindow w = new ConfigureLaneWindow(laneIndex);
+            ConfigureLaneWindow w = new ConfigureLaneWindow(playerProviderLoader, laneIndex);
             w.OnOk += playerConfiguredReceived;
             w.Show();
         }
@@ -175,18 +181,13 @@ namespace FitzLane
             {
                 foreach (Lane lane in lanes)
                 {
-                    if (lane.playerType == typeof(BotConstant).Name)
+                    foreach (IPlayerProvider provider in playerProviderLoader.GetPlayerProvider())
                     {
-                        MemoryStream memStream = new MemoryStream();
-                        StreamWriter strWriter = new StreamWriter(memStream);
-                        strWriter.Write(lane.playerConfig);
-                        strWriter.Flush();
-                        memStream.Position = 0;
-                        DataContractJsonSerializer playerSerializer = new DataContractJsonSerializer(typeof(BotConstantConfig));
-                        BotConstantConfig botCfg = (BotConstantConfig)playerSerializer.ReadObject(memStream);
-
-                        IPlayer newPlayer = new BotConstant(lane.ergId, botCfg.pace, botCfg.spm);
-                        players[lane.ergId] = newPlayer;
+                        if(provider.IsValidPlayertype(lane.playerType))
+                        {
+                            IPlayer newPlayer = provider.GetPlayer(lane.playerConfig);
+                            players[lane.ergId] = newPlayer;
+                        }
                     }
                 }
             }
