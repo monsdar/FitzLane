@@ -78,6 +78,9 @@
     <Compile Include="Config\ConfigWriter.cs" />
     <Compile Include="Config\Lane.cs" />
     <Compile Include="Interfaces\IErgSender.cs" />
+    <Compile Include="LaneList.xaml.cs">
+      <DependentUpon>LaneList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PlayerItem.xaml.cs">
       <DependentUpon>PlayerItem.xaml</DependentUpon>
     </Compile>
@@ -88,6 +91,10 @@
     <Compile Include="Sender\SimpleErgSender.cs" />
     <Compile Include="Sender\ZmqErgSender.cs" />
     <Page Include="ConfigureLaneWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LaneList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -13,6 +13,8 @@ class BotConstant : IPlayer
 
     //this is needed to measure the time if this bot is not attached to any parent lane
     private DateTime starttime = DateTime.Now;
+
+    private string parentErgId = "";
         
     public BotConstant(string config)
     {
@@ -51,6 +53,18 @@ class BotConstant : IPlayer
     {
         get
         { return "BotConstant"; }
+    }
+
+    public string ParentId
+    {
+        get
+        {
+            return parentErgId;
+        }
+        set
+        {
+            parentErgId = value;
+        }
     }
 
     public EasyErgsocket.Erg GetErg()

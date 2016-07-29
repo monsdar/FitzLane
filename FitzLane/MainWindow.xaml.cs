@@ -1,9 +1,7 @@
 ﻿using NetMQ;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
 using System.Windows;
 using System.Windows.Media;
 using FitzLane.Interfaces;
@@ -15,10 +13,10 @@ namespace FitzLane
 {
     public partial class MainWindow : Window
     {
+        //First: ErgId, Second: Player instance... putting the players into a map makes it easier to find them
         IDictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
         IErgSender ergSender = null;
         const string configFilePath = "worldConfig.json";
-        List<Lane> lanes = new List<Lane>();
         ConfigReader reader = null;
         PlayerProviderLoader playerProviderLoader = null;
 
@@ -29,28 +27,13 @@ namespace FitzLane
             //get the PlayerLoaders from the plugins
             playerProviderLoader =  new PlayerProviderLoader("plugins/player/");
 
-            ////check if there's a config... if not write the default config
-            //if (!File.Exists(configFilePath))
-            //{
-            //    ConfigWriter.WriteDefaultConfig(configFilePath);
-            //}
-
-            //prefill the UI - this is an easy way to have every lane filled, even if it is replaced by a configured lane in the next step
-            for (int i=0; i < 5; ++i)
-            {
-                Lane lane = new Lane();
-                lane.laneIndex = i;
-                lanes.Add(lane);
-            }
-
             // Load default config (this loads an existing config or the previously created default config
             reader = new ConfigReader(configFilePath);
             foreach (Lane lane in reader.getLanes())
             {
-                playerConfiguredReceived(lane.laneIndex, lane);
+                laneList.AddLaneConfig(lane);
+                CreatePlayerFromLane(lane);
             }
-            
-            updateButtons();
             
             //init the networking
             NetMQContext context = NetMQContext.Create();
@@ -70,129 +53,75 @@ namespace FitzLane
             {
                 //see if there's a player that we could update
                 bool hasPlayerBeenUpdated = false;
-                foreach (Lane lane in lanes)
+                foreach (IPlayer player in players.Values)
                 {
-                    if (players.ContainsKey(lane.ergId) &&
-                        !alreadyUpdatedPlayers.Contains(lane.ergId))
+                    //do not update the same player twice
+                    if(alreadyUpdatedPlayers.Contains(player.GetErg().ergId))
                     {
-                        if (lane.parentId == "")
-                        {
-                            players[lane.ergId].Update(null);
-                            alreadyUpdatedPlayers.Add(lane.ergId);
-                            hasPlayerBeenUpdated = true;
-                        }
-                        else if (alreadyUpdatedPlayers.Contains(lane.parentId))
-                        {
-                            EasyErgsocket.Erg parent = players[lane.parentId].GetErg();
-                            players[lane.ergId].Update(parent);
-                            alreadyUpdatedPlayers.Add(lane.ergId);
-                            hasPlayerBeenUpdated = true;
-                        }
-                        else
-                        {
-                            //This lane has a parent that does not exist...
-                            continue;
-                        }
+                        continue;
+                    }
+
+                    //update all the player without parents or whose parents have already been updated
+                    if(player.ParentId == "")
+                    {
+                        player.Update(null);
+                        alreadyUpdatedPlayers.Add(player.GetErg().ergId);
+                        hasPlayerBeenUpdated = true;
+                    }
+                    else if (alreadyUpdatedPlayers.Contains(player.ParentId))
+                    {
+                        EasyErgsocket.Erg parent = players[player.ParentId].GetErg();
+                        player.Update(parent);
+                        alreadyUpdatedPlayers.Add(player.GetErg().ergId);
+                        hasPlayerBeenUpdated = true;
+                    }
+                    else
+                    {
+                        //This lane has a parent that does not exist yet...
+                        continue;
                     }
                 }
 
                 if (!hasPlayerBeenUpdated)
                 {
                     //no player updated... there seems to be a problem?
-                    //TODO: Have a plan on what to do...
+                    //TODO: What should we do? This typically means there is a erg without parent or a circular dependency...
                     break;
                 }
             }
 
             //update the GUI
-            foreach (KeyValuePair<string, IPlayer> playerItem in players)
-            {
-                foreach (UIElement element in stack_Main.Children)
-                {
-                    if (element.GetType() == typeof(PlayerItem))
-                    {
-                        ((PlayerItem)element).Update(playerItem.Value);
-                    }
-                }
-            }
+            laneList.UpdatePlayer(players.Values.ToList());
 
             //send the bots to network
-            IList<IPlayer> flattenedList = players.Values.ToList<IPlayer>();
-            ergSender.SendErgs(flattenedList);
+            ergSender.SendErgs(players.Values.ToList());
         }
 
-        void updateButtons()
+        void CreatePlayerFromLane(Lane givenLane)
         {
-            stack_Main.Children.Clear();
-
-            foreach (Lane lane in lanes)
+            foreach (IPlayerProvider provider in playerProviderLoader.GetPlayerProvider())
             {
-                if (lane != null
-                    && lane.playerType != "")
+                if (provider.IsValidPlayertype(givenLane.playerType))
                 {
-                    foreach (IPlayerProvider provider in playerProviderLoader.GetPlayerProvider())
-                    {
-                        if (provider.IsValidPlayertype(lane.playerType))
-                        {
-                            IPlayer player = provider.GetPlayer(lane.playerConfig);
-                            stack_Main.Children.Add(new PlayerItem(player, lane.isMainPlayer));
-                        }
-                    }
-                }
-                else
-                {
-                    PlayerItemEmpty newEmpty = new PlayerItemEmpty(lane.laneIndex);
-                    newEmpty.OnAdd += addPlayerReceived;
-                    stack_Main.Children.Add(newEmpty);
+                    IPlayer player = provider.GetPlayer(givenLane.playerConfig);
+                    player.ParentId = givenLane.parentId;
+                    players[givenLane.ergId] = player;
+                    laneList.UpdatePlayer(player);
                 }
             }
-        }
-
-        private void addPlayerReceived(int laneIndex)
-        {
-            ConfigureLaneWindow w = new ConfigureLaneWindow(playerProviderLoader, laneIndex);
-            w.OnOk += playerConfiguredReceived;
-            w.Show();
-        }
-
-        void playerConfiguredReceived(int laneIndex, Lane laneCfg)
-        {
-            for (int i=0; i < lanes.Count; ++i)
-            {
-                if (lanes[i].laneIndex == laneIndex)
-                {
-                    lanes[i] = laneCfg;
-                    updateButtons();
-                    return;
-                }
-            }
-            lanes.Add(laneCfg);
-            updateButtons();
         }
 
         private void button_Start_Click(object sender, RoutedEventArgs e)
         {
             if (button_StartStop.Content.ToString() == "Stop")
             {
-                players.Clear();
                 button_StartStop.Content = "Start";
             }
             else
             {
-                foreach (Lane lane in lanes)
-                {
-                    foreach (IPlayerProvider provider in playerProviderLoader.GetPlayerProvider())
-                    {
-                        if(provider.IsValidPlayertype(lane.playerType))
-                        {
-                            IPlayer newPlayer = provider.GetPlayer(lane.playerConfig);
-                            players[lane.ergId] = newPlayer;
-                        }
-                    }
-                }
+                button_StartStop.Content = "Stop";
             }
 
-            button_StartStop.Content = "Stop";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
 using FitzLanePlugin.Interfaces;
+using System.Windows;
 
 namespace FitzLane
 {
@@ -15,24 +16,27 @@ namespace FitzLane
         public PlayerItem(IPlayer givenPlayer, bool isMainPlayer=false)
         {
             InitializeComponent();
+
             DataContext = this;
             player = givenPlayer;
             this.isMainPlayer = isMainPlayer;
         }
 
-        public void Update(IPlayer givenPlayer)
+        public void Update(IPlayer givenPlayer, bool isMainPlayer=false)
         {
-            if(givenPlayer.GetErg().ergId == player.GetErg().ergId)
-            {
-                player = givenPlayer;
-                RaisePropertyChanged("PlayerName");
-                RaisePropertyChanged("PlayerType");
-                RaisePropertyChanged("MainPlayer");
-                RaisePropertyChanged("Distance");
-                RaisePropertyChanged("Pace");
-            }
+            player = givenPlayer;
+            this.isMainPlayer = isMainPlayer;
+            RaisePropertyChanged("PlayerName");
+            RaisePropertyChanged("PlayerType");
+            RaisePropertyChanged("MainPlayer");
+            RaisePropertyChanged("Distance");
+            RaisePropertyChanged("Pace");
         }
 
+        public string ErgId
+        {
+            get { return player.GetErg().ergId; }
+        }
         public string PlayerName
         {
             get { return player.GetErg().name; }

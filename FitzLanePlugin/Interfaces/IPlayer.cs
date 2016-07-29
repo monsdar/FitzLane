@@ -5,6 +5,7 @@ namespace FitzLanePlugin.Interfaces
     {
         string Name { get; }
         string Description { get; }
+        string ParentId { get; set; }
         
         void Update(EasyErgsocket.Erg givenParent = null);
         EasyErgsocket.Erg GetErg();

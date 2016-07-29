@@ -86,10 +86,10 @@ namespace FitzLane.Plugin
                     return playerProvider;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //unable to load...
-                throw new ArgumentException("Unable to load IPlayerProvider from " + file);
+                throw new ArgumentException("Unable to load IPlayerProvider from " + file + "(" + ex.ToString() + ")");
             }
             
             //unable to load...

@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:FitzLane"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Border CornerRadius="6" BorderBrush="Gray" Background="LightGray" BorderThickness="2" DockPanel.Dock="Top">
+
+    <Border CornerRadius="6" BorderBrush="Gray" Background="LightGray" BorderThickness="2">
         <StackPanel Orientation="Horizontal">
             <StackPanel HorizontalAlignment="Left" MinWidth="150">
                 <Label Content="{Binding PlayerType}" FontSize="12" />
