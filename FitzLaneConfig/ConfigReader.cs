@@ -2,9 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace FitzLane.Config
+namespace FitzLaneConfig
 {
-    class ConfigReader
+    public class ConfigReader
     {
         List<Lane> laneList = new List<Lane>();
 

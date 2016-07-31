@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Collections.Generic;
 using System.Windows;
-using FitzLane.Config;
+using FitzLaneConfig;
 using FitzLanePlugin;
 using FitzLanePlugin.Interfaces;
 

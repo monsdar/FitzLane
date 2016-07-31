@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace FitzLane.Config
+namespace FitzLaneConfig
 {
     [DataContract]
     public class Lane

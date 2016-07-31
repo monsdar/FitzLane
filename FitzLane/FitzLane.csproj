@@ -74,9 +74,6 @@
     <Compile Include="ConfigureLaneWindow.xaml.cs">
       <DependentUpon>ConfigureLaneWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Config\ConfigReader.cs" />
-    <Compile Include="Config\ConfigWriter.cs" />
-    <Compile Include="Config\Lane.cs" />
     <Compile Include="LaneList.xaml.cs">
       <DependentUpon>LaneList.xaml</DependentUpon>
     </Compile>
@@ -145,6 +142,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FitzLaneConfig\FitzLaneConfig.csproj">
+      <Project>{1897f3e1-d3cf-4066-b4b3-972ff5122713}</Project>
+      <Name>FitzLaneConfig</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FitzLanePlugin\FitzLanePlugin.csproj">
       <Project>{b097ff6f-bcce-4f03-890c-c25acdd82be5}</Project>
       <Name>FitzLanePlugin</Name>

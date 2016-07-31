@@ -3,9 +3,9 @@ using System.Text;
 using System.IO;
 using System.Runtime.Serialization.Json;
 
-namespace FitzLane.Config
+namespace FitzLaneConfig
 {
-    class ConfigWriter
+    public class ConfigWriter
     {
         public ConfigWriter(string givenFile)
         {}

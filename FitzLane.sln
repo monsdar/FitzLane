@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotConstant", "BotConstant\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZmqErgSender", "ZmqErgSender\ZmqErgSender.csproj", "{CF596FAC-F854-4969-9F28-073FDE2936EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitzLaneUI", "FitzLaneUI\FitzLaneUI.csproj", "{81F11A57-30AA-4304-92CC-0E43C00F3A3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitzLaneConfig", "FitzLaneConfig\FitzLaneConfig.csproj", "{1897F3E1-D3CF-4066-B4B3-972FF5122713}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{CF596FAC-F854-4969-9F28-073FDE2936EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF596FAC-F854-4969-9F28-073FDE2936EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF596FAC-F854-4969-9F28-073FDE2936EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81F11A57-30AA-4304-92CC-0E43C00F3A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81F11A57-30AA-4304-92CC-0E43C00F3A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81F11A57-30AA-4304-92CC-0E43C00F3A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81F11A57-30AA-4304-92CC-0E43C00F3A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1897F3E1-D3CF-4066-B4B3-972FF5122713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1897F3E1-D3CF-4066-B4B3-972FF5122713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1897F3E1-D3CF-4066-B4B3-972FF5122713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1897F3E1-D3CF-4066-B4B3-972FF5122713}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

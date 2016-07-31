@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FitzLane.Config;
+using FitzLaneConfig;
 using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
