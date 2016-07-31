@@ -39,7 +39,7 @@ namespace FitzLane
             ergSenders = ergSenderLoader.GetErgSender();
             foreach (IErgSender sender in ergSenders)
             {
-                //TODO: This inits every sender with a zmq address... is this really what we want to do?
+                //TODO: This inits every sender with a zmq address... better implement some kind of config mechanism...
                 sender.Connect("tcp://127.0.0.1:21744");
             }
             
