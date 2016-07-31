@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Windows;
 using FitzLane.Config;
-using FitzLane.Plugin;
+using FitzLanePlugin;
 using FitzLanePlugin.Interfaces;
 
 namespace FitzLane

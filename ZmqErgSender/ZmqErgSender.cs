@@ -2,10 +2,9 @@
 using NetMQ;
 using NetMQ.Sockets;
 using ProtoBuf;
-using FitzLane.Interfaces;
 using FitzLanePlugin.Interfaces;
 
-namespace FitzLane
+namespace ZmqErgSender
 {
     class ZmqErgSender : IErgSender
     {
@@ -14,9 +13,9 @@ namespace FitzLane
         NetMQContext context = null;
         PublisherSocket pubSocket = null;
 
-        public ZmqErgSender(NetMQContext context)
+        public ZmqErgSender()
         {
-            this.context = context;
+            context = NetMQContext.Create();
             IsConnected = false;
         }
 

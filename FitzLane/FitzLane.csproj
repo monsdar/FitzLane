@@ -77,7 +77,6 @@
     <Compile Include="Config\ConfigReader.cs" />
     <Compile Include="Config\ConfigWriter.cs" />
     <Compile Include="Config\Lane.cs" />
-    <Compile Include="Interfaces\IErgSender.cs" />
     <Compile Include="LaneList.xaml.cs">
       <DependentUpon>LaneList.xaml</DependentUpon>
     </Compile>
@@ -87,9 +86,6 @@
     <Compile Include="PlayerItemEmpty.xaml.cs">
       <DependentUpon>PlayerItemEmpty.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Plugin\PlayerProviderLoader.cs" />
-    <Compile Include="Sender\SimpleErgSender.cs" />
-    <Compile Include="Sender\ZmqErgSender.cs" />
     <Page Include="ConfigureLaneWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,11 +150,11 @@
       <Name>FitzLanePlugin</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir $(ProjectDir)$(OutDir)plugins\player
-copy $(SolutionDir)BotConstant\$(OutDir)BotConstant.dll $(ProjectDir)$(OutDir)plugins\player
-copy $(SolutionDir)FitzLanePlugin\$(OutDir)FitzLanePlugin.dll $(ProjectDir)$(OutDir)plugins\player</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

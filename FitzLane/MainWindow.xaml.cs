@@ -1,12 +1,10 @@
-﻿using NetMQ;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using FitzLane.Interfaces;
 using FitzLane.Config;
-using FitzLane.Plugin;
+using FitzLanePlugin;
 using FitzLanePlugin.Interfaces;
 
 namespace FitzLane
@@ -15,10 +13,11 @@ namespace FitzLane
     {
         //First: ErgId, Second: Player instance... putting the players into a map makes it easier to find them
         IDictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
-        IErgSender ergSender = null;
+        IList<IErgSender> ergSenders = new List<IErgSender>();
         const string configFilePath = "worldConfig.json";
         ConfigReader reader = null;
         PlayerProviderLoader playerProviderLoader = null;
+        ErgSenderLoader ergSenderLoader = null;
 
         public MainWindow()
         {
@@ -26,6 +25,7 @@ namespace FitzLane
 
             //get the PlayerLoaders from the plugins
             playerProviderLoader =  new PlayerProviderLoader("plugins/player/");
+            ergSenderLoader = new ErgSenderLoader("plugins/ergsender/");
 
             // Load default config (this loads an existing config or the previously created default config
             reader = new ConfigReader(configFilePath);
@@ -34,11 +34,14 @@ namespace FitzLane
                 laneList.AddLaneConfig(lane);
                 CreatePlayerFromLane(lane);
             }
-            
-            //init the networking
-            NetMQContext context = NetMQContext.Create();
-            ergSender = new ZmqErgSender(context);
-            ergSender.Connect("tcp://127.0.0.1:21744");
+
+            //init the senders
+            ergSenders = ergSenderLoader.GetErgSender();
+            foreach (IErgSender sender in ergSenders)
+            {
+                //TODO: This inits every sender with a zmq address... is this really what we want to do?
+                sender.Connect("tcp://127.0.0.1:21744");
+            }
             
             //TODO: this is our synchronuous gameloop... better do some threading in the future
             CompositionTarget.Rendering += mainLoop;
@@ -90,11 +93,16 @@ namespace FitzLane
                 }
             }
 
-            //update the GUI
-            laneList.UpdatePlayer(players.Values.ToList());
+            IList<IPlayer> playerList = players.Values.ToList();
 
-            //send the bots to network
-            ergSender.SendErgs(players.Values.ToList());
+            //update the GUI
+            laneList.UpdatePlayer(playerList);
+
+            //send the bots
+            foreach (IErgSender ergSender in ergSenders)
+            {
+                ergSender.SendErgs(playerList);
+            }
         }
 
         void CreatePlayerFromLane(Lane givenLane)

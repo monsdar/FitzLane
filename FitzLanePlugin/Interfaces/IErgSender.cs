@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using FitzLanePlugin.Interfaces;
 
-namespace FitzLane.Interfaces
+namespace FitzLanePlugin.Interfaces
 {
     public interface IErgSender
     {
